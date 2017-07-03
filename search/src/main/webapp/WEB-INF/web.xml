@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	metadata-complete="false">
+	<servlet>
+		<servlet-name>search</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>search</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/applicationContext.xml
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<filter>
+		<filter-name>dispatchRequestToSolr</filter-name>
+		<!-- <filter-class>org.apache.solr.servlet.SolrDispatchFilter</filter-class> -->
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter>
+		<filter-name>SolrRequestFilter</filter-name>
+		<!-- <filter-class>org.apache.solr.servlet.SolrDispatchFilter</filter-class> -->
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<!-- NOTE: When using multicore, /admin JSP URLs with a core specified 
+			such as /solr/coreName/admin/stats.jsp get forwarded by a RequestDispatcher 
+			to /solr/admin/stats.jsp with the specified core put into request scope keyed 
+			as "org.apache.solr.SolrCore". It is unnecessary, and potentially problematic, 
+			to have the SolrDispatchFilter configured to also filter on forwards. Do 
+			not configure this dispatcher as <dispatcher>FORWARD</dispatcher>. -->
+		<filter-name>SolrRequestFilter</filter-name>
+		<url-pattern>/select</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SolrRequestFilter</filter-name>
+		<url-pattern>/terms</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SolrRequestFilter</filter-name>
+		<url-pattern>/admin/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SolrRequestFilter</filter-name>
+		<url-pattern>/analysis/field</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>SolrRequestFilter</filter-name>
+		<url-pattern>/admin.html</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SolrRequestFilter</filter-name>
+		<url-pattern>/suggest</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SolrRequestFilter</filter-name>
+		<url-pattern>/autocomplete</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SolrRequestFilter</filter-name>
+		<url-pattern>/dataimport</url-pattern>
+	</filter-mapping>
+
+	<!-- Otherwise it will continue to the old servlets -->
+	<!-- <servlet> <servlet-name>Logging</servlet-name> <servlet-class>org.apache.solr.servlet.LogLevelSelection</servlet-class> 
+		</servlet> <servlet-mapping> <servlet-name>Logging</servlet-name> <url-pattern>/admin/logging</url-pattern> 
+		</servlet-mapping> -->
+
+
+	<servlet>
+		<servlet-name>LoadAdminUI</servlet-name>
+		<servlet-class>org.apache.solr.servlet.LoadAdminUiServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>RedirectOldAdminUI</servlet-name>
+		<servlet-class>org.apache.solr.servlet.OLRedirectServlet</servlet-class>
+		<init-param>
+			<param-name>destination</param-name>
+			<param-value>[[context]]/#/</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>RedirectLogging</servlet-name>
+		<servlet-class>org.apache.solr.servlet.OLRedirectServlet</servlet-class>
+		<init-param>
+			<param-name>destination</param-name>
+			<param-value>[[context]]/#/~logging</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RedirectOldAdminUI</servlet-name>
+		<url-pattern>/admin/</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LoadAdminUI</servlet-name>
+		<url-pattern>/admin.html</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RedirectLogging</servlet-name>
+		<url-pattern>/logging</url-pattern>
+	</servlet-mapping>
+</web-app>
