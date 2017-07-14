@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
 
-@Component("dispatchRequestToSolr")
+//@Component("dispatchRequestToSolr")
 public class DispatchRequestToSolr implements Filter {
 
 	public void destroy() {

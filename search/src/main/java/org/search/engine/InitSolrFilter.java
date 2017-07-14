@@ -1,30 +1,22 @@
 package org.search.engine;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.nio.file.Path;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.CoreContainer;
-import org.apache.solr.core.CoreDescriptor;
-import org.apache.solr.core.SolrCore;
 import org.apache.solr.core.SolrResourceLoader;
-import org.apache.solr.logging.LogWatcher;
 import org.apache.solr.servlet.SolrDispatchFilter;
 import org.springframework.stereotype.Component;
-
-import com.google.common.collect.ImmutableMap;
 
 @Component("SolrRequestFilter")
 public class InitSolrFilter extends SolrDispatchFilter {
 
-	private SolrServer solrServer;
+	public static SolrClient solrServer;
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
@@ -58,7 +50,7 @@ public class InitSolrFilter extends SolrDispatchFilter {
 			 * ImmutableMap.of(CoreDescriptor.CORE_DATADIR, new
 			 * File("D:/x_solr/solr/").getAbsolutePath()));
 			 */
-			EmbeddedSolrServer solrServer = new EmbeddedSolrServer(coreContainer, "search-core");
+			solrServer = new EmbeddedSolrServer(coreContainer, "search-core");
 			System.out.println("getting cores:" + coreContainer.getAllCoreNames());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -66,6 +58,10 @@ public class InitSolrFilter extends SolrDispatchFilter {
 		}
 
 		System.out.println("Initialization of  Solr Filter done...");
+	}
+
+	public SolrClient getSolrClient() {
+		return solrServer;
 	}
 
 }
