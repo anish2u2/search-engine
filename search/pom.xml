@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
-		<org.springframework.version>4.2.1.RELEASE</org.springframework.version>
+		<org.springframework.version>5.2.20.RELEASE</org.springframework.version>
 		<solr.version>5.5.4</solr.version>
 		<org.springframework.spring-data-solr.version>1.4.1.RELEASE</org.springframework.spring-data-solr.version>
 		<tomcat.version>7.0.63</tomcat.version>
